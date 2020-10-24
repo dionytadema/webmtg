@@ -1,11 +1,11 @@
 <template>
-  <div class="player">
-    <v-text-field
-      label="Teamnaam"
-      v-model="name"/>
-    <v-btn @click="add">
-      add</v-btn>
-  </div>
+  <v-btn class="mx-2"
+    @click="add"
+    fab>
+    <v-icon dark>
+      mdi-plus
+    </v-icon>
+  </v-btn>
 </template>
 
 <script>
@@ -41,14 +41,4 @@ export default {
 </script>
 
 <style>
-  .player {
-    width: 240px;
-    margin: 8px;
-    padding: 4px;
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    background: #444;
-    border-radius: 8px;
-  }
 </style>

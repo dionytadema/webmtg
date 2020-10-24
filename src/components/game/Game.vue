@@ -12,7 +12,7 @@
         @click="endGame">
         end</v-btn>
     </div>
-    <mTeam v-for="(t, i) of game.teams" :key="i" :team="t"/>
+    <mTeam v-for="(t, i) of game.teams" :key="i" :team="t" :idx="i"/>
     <mPlayer v-for="(p, i) of game.players" :key="i" :player="p"/>
     <AddTeam/>
   </div>

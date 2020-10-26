@@ -1,7 +1,8 @@
 <template>
   <div class="player">
-    <div>
-      <span class="title">{{player.user.name}}</span>
+    <div class="title">
+      <span style="flex: 1 0 auto"
+        >{{player.user.name}}</span>
       <v-btn icon
         @click="$emit('del-player',i)">
         <v-icon>mdi-delete</v-icon>
@@ -36,5 +37,9 @@ export default {
     align-items: center;
     background: #333;
     border-radius: 8px;
+  }
+  .player>.title {
+    align-self: stretch;
+    display: flex;
   }
 </style>

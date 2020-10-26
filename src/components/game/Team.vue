@@ -1,6 +1,12 @@
 <template>
   <div class="team">
-    <div class="title">Team {{idx+1}}
+    <div class="title">
+      <span style="flex: 1 0 auto"
+        >Team {{idx+1}}</span>
+      <v-btn icon
+        @click="addPlayer">
+        <v-icon>mdi-account-plus</v-icon>
+      </v-btn>
       <v-btn icon
         @click="remove">
         <v-icon>mdi-delete</v-icon>
@@ -11,11 +17,6 @@
         :player="p" :i="i"
         @del-player="delPlayer"/>
     </div>
-    <v-btn class="mx-2"
-      @click="addPlayer"
-      fab>
-      <v-icon>mdi-plus</v-icon>
-    </v-btn>
     <div>
       <v-btn icon
         @click="ind">
@@ -81,6 +82,10 @@ export default {
     align-items: center;
     background: #444;
     border-radius: 8px;
+  }
+  .team>.title {
+    align-self: stretch;
+    display: flex;
   }
   .team .players {
     display: flex;

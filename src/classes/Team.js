@@ -1,26 +1,32 @@
+import Count from '@/classes/Count';
 class Team {
   constructor() {
     this.players = []
     // Game state
-    this.life = {
-      val: 0,
-      disp: 0,
-    }
-    this.pots = {
-      val: 0,
-      disp: 0,
-      min: 0,
-      img: require("@/assets/image/poison.jpg"),
-      sound_gain: require("@/assets/sound/poison.mp3"),
-      sound_lose: require("@/assets/sound/gain.mp3")
-    }// Commander damage list
+    this.life = new Count(
+      "life",
+      null,
+      {// Sound
+        gain: require("@/assets/sound/gain.mp3"),
+        lose: require("@/assets/sound/lose.mp3"),
+      })
+    this.pots = new Count(
+      "potion",
+      require("@/assets/image/poison.jpg"),
+      {// Sound
+        gain: require("@/assets/sound/poison.mp3"),
+        lose: require("@/assets/sound/gain.mp3"),
+      })
     this.coms = []
   }
   reset(mode) {
     let life = {
       casual: 20,
+      teams: 30,
       commander: 40,
-      headedgiant: 30,
+      enemy: 40,
+      hydra: 3,
+      gods: 3
     }[mode]
     this.life.val = life
     this.life.disp = life
@@ -38,13 +44,14 @@ class Team {
   }
   addComms(list) {
     for (let c of list) {
-      this.coms.push({
-        val: 0,
-        disp: 0,
-        img: c.img,
-        sound_gain: require("@/assets/sound/lose.mp3"),
-        sound_lose: require("@/assets/sound/gain.mp3")
-      })
+      this.coms.push(
+        new Count(
+          "commander",
+          c.img,
+          {
+            gain: require("@/assets/sound/lose.mp3"),
+            lose: require("@/assets/sound/gain.mp3"),
+          }))
     }
   }
 }

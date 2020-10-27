@@ -3,17 +3,24 @@
     <Card class="small"
       v-if="count.img"
       :image="count.img"/>
-    <v-btn text x-large class="val text-h2 mx-2"
-      @mousedown="dragStart">{{val}}</v-btn>
+    <div class="value">
+      <v-btn text class="text-h2 mx-1"
+        @mousedown="dragStart"
+        @touchstart="dragStart">{{val}}</v-btn>
+      <slot/>
+    </div>
     <div class="ctrl">
-      <v-btn small
-        @click="add()"
-        @click.right.prevent="add(5)"
-      >+</v-btn>
-      <v-btn small
-        @click="add(-1)"
-        @click.right.prevent="add(-5)"
-      >-</v-btn>
+      <v-btn fab small class="my-1"
+        @click="count.add(1)"
+        @click.right.prevent="alt">
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
+      <v-btn fab small class="my-1"
+        v-if="count.type=='life'"
+        @click="count.add(-1)"
+        @click.right.prevent="count.add(-5)">
+      <v-icon>mdi-minus</v-icon>
+    </v-btn>
     </div>
   </div>
 </template>
@@ -22,7 +29,7 @@
 import Card from '../ui/Card';
 
 export default {
-  name: 'Count',
+  name: 'mCount',
   components: {
     Card,
   },
@@ -30,7 +37,6 @@ export default {
     count: Object,
   },
   data: () => ({
-    active: false,
     drag: false,
     y: 0,
     v: 0,
@@ -42,80 +48,34 @@ export default {
     }
   },
   methods: {
-    act() {
-      if (this.active)
-        return
-      this.active = true
-      this.upd()
-    },
-    upd() {
-      let c = this.count
-      if (c.val>c.disp) {
-        this.gain()
-        c.disp++
-      }
-      if (c.val<c.disp) {
-        this.lose()
-        c.disp--
-      }
-      // Check if done
-      if (c.val==c.disp) {
-        this.active = false
-        return
-      }
-      setTimeout(this.upd,100)
-    },
-    add(x=1) {
-      this.count.val+=x
-      this.act()
-    },
-    scroll(e) {
-      if (e.deltaY<0)
-        this.count.val++
+    alt() {
+      if (this.count.type=="life")
+        this.count.add(5)
       else
-        this.count.val--
-      this.act()
+        this.count.add(-1)
     },
     dragStart(e) {
+      e.preventDefault()
       this.drag = true
-      this.y = e.clientY
+      this.y = e.clientY || e.touches[0].clientY
       this.v = this.count.val
-      document.addEventListener("mousemove", this.dragUpd)
+      document.addEventListener("mousemove", this.dragMove)
+      document.addEventListener("touchmove", this.dragMove)
       document.addEventListener("mouseup", this.dragEnd)
+      document.addEventListener("touchend", this.dragEnd)
     },
-    dragUpd(e) {
-      this.v = this.count.val + Math.floor((this.y - e.clientY)/20)
+    dragMove(e) {
+      let ey = e.type=="mousemove"?e.clientY:e.changedTouches[0].clientY
+      this.v = this.count.val + Math.floor((this.y - ey)/10)
     },
     dragEnd() {
-      document.removeEventListener("mousemove", this.dragUpd)
+      document.removeEventListener("mousemove", this.dragMove)
+      document.removeEventListener("touchmove", this.dragMove)
       document.removeEventListener("mouseup", this.dragEnd)
+      document.removeEventListener("touchend", this.dragEnd)
       this.count.val = this.v
       this.drag = false
-      this.act()
-    },
-    async gain() {
-      let sound;
-      if(this.count.sound_gain)
-        sound = this.count.sound_gain
-      else// Default
-        sound = require("@/assets/sound/gain.mp3")
-      let audio = new Audio(sound)
-      await new Promise((r) => {
-        audio.onended = r
-        audio.play()
-      })
-    },
-    async lose() {
-      let sound;
-      if(this.count.sound_lose)
-        sound = this.count.sound_lose
-      else// Default
-        sound = require("@/assets/sound/lose.mp3")
-      let audio = new Audio(sound)
-      await new Promise((r) => {
-        audio.onended = r
-        audio.play()
-      })
+      this.count.run()
     }
   }
   //methods: {},
@@ -124,25 +84,32 @@ export default {
 </script>
 
 <style>
+  
+
   .count {
     align-self: stretch;
     margin: 4px;
-    height: 64px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
   }
 
-  .count .val {
+  .count .value {
     flex: 1 0 auto;
-    text-align: center;
+    display: flex;
+    flex-flow: column;
+  }
+  .count .value .v-btn {
+    flex: 1 0 auto;
+    padding: 0 8px;
+  }
+  @media only screen and (max-width: 1200px) {
+    .count .value .v-btn {padding: 0 4px;}
   }
   
   .count .ctrl {
     align-self: stretch;
     display: flex;
     flex-flow: column;
-    justify-content: space-around;
+    justify-content: space-evenly;
   }
 
 </style>

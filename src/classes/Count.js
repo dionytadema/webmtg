@@ -1,51 +1,56 @@
-class Player {
-  constructor(val, img, min, soundDec) {
-    this.user = user
-    this.deck = deck
-    // Game state
-    this.life = 0
+class Count {
+  constructor(type, img, sound) {
+    this.type = type
+    this.active = false
+    this.val = 0
     this.disp = 0
-    this.pots = {
-      img: require("@/assets/poison.jpg"),
-
-      val: 0
-    }// Commander damage list
-    this.com = []
-    this.tick = setInterval(this.update.bind(this),100)
+    this.img = img
+    this.sound = sound
   }
-  update() {
-    if (this.life>this.disp) {
-      this.heal()
+  add(x=1) {
+    this.val+=x
+    this.run()
+  }
+  run() {
+    if (this.active)
+      return
+    this.active = true
+    this.upd()
+  }
+  upd() {
+    let MAX = 20
+    let MIND = 25
+    let MAXD = 250
+    switch(true) {
+    case this.disp<this.val-MAX:
+      this.disp = this.val-MAX
+      this.play("gain")
+      break;
+    case this.disp<this.val:
+      this.play("gain")
       this.disp++
-    }
-    if (this.life<this.disp) {
-      this.hurt()
+      break;
+    case this.disp>this.val+MAX:
+      this.disp = this.val+MAX
+      this.play("lose")
+      break;
+    case this.disp>this.val:
+      this.play("lose")
       this.disp--
+      break;
     }
-    
+    // Check if done
+    if (this.val==this.disp) {
+      this.active = false
+      return
+    }
+    let dif = Math.abs(this.val-this.disp)
+    let delay = MAXD - (dif/MAX*(MAXD-MIND))
+    setTimeout(this.upd.bind(this),delay)
   }
-  // Sound
-  async heal() {
-    //TODO: we should load the users sounds
-    let audio = new Audio(require("@/assets/Hactivated.mp3"))
-    await new Promise((r) => {
-      audio.onended = r
-      audio.play()
-    })
-  }
-  async hurt() {
-    let audio = new Audio(require("@/assets/Dehactivated.mp3"))
-    await new Promise((r) => {
-      audio.onended = r
-      audio.play()
-    })
-  }
-  async kill() {
-    let audio = new Audio(require("@/assets/rekt.mp3"))
-    await new Promise((r) => {
-      audio.onended = r
-      audio.play()
-    })
+  play(name) {
+    let audio = new Audio(this.sound[name])
+    audio.play()
   }
 }
-export default Player
+export default Count

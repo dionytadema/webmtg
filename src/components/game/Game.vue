@@ -6,26 +6,28 @@
         :items="['casual','commander','headedgiant']"/>
       <div style="flex:5 0 0px"/>
       <v-btn class="mx-2"
+        @click="addTeam">
+        add team</v-btn>
+      <v-btn class="mx-2"
         @click="startGame">
         start</v-btn>
       <v-btn class="mx-2"
         @click="endGame">
         end</v-btn>
     </div>
-    <mTeam v-for="(t, i) of game.teams" :key="i" :team="t" :idx="i"/>
+    <mTeam v-for="(t, i) of game.teams" :key="i" :team="t" :i="i"/>
     <mPlayer v-for="(p, i) of game.players" :key="i" :player="p"/>
-    <AddTeam/>
   </div>
 </template>
 
 <script>
 import mPlayer from './Player';
 import mTeam from './Team';
-import AddTeam from './AddTeam';
+import Team from '@/classes/Team';
 import Player from '@/classes/Player';
 export default {
   name: 'Game',
-  components: {mPlayer, mTeam, AddTeam},
+  components: {mPlayer, mTeam},
   //props: {},
   //data: ()=>({}),
   data: () => ({}),
@@ -35,11 +37,14 @@ export default {
     }
   },
   methods: {
-    addPlayer() {
+    addTeam() {
       let user = this.$root.users[Math.floor((Math.random()*this.$root.users.length))]
       let deck = this.$root.decks[Math.floor((Math.random()*this.$root.decks.length))]
       // Add player
-      this.game.players.push(new Player(user,deck))
+      let player = new Player(user,deck)
+      let team = new Team()
+      team.players.push(player)
+      this.game.teams.push(team) 
     },
     startGame() {
       if (this.game.active && !confirm("Het spel is al gestart, wil je restarten?"))

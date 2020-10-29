@@ -1,6 +1,7 @@
 <template>
   <div class="player">
     <div class="header">
+      <!--Card class="icon" :image="player.user.img"/-->
       <span class="title">
         {{player.user.name}}</span>
       <v-btn icon
@@ -34,7 +35,7 @@ export default {
     padding: 4px;
     display: flex;
     flex-flow: column;
-    background: #333;
+    background: #444;
     border-radius: 8px;
   }
   .player>.header {

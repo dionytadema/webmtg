@@ -6,10 +6,6 @@
       <mPlayerPicker
         @add-player="addPlayer"/>
       <v-btn icon
-        @click="addPlayer">
-        <v-icon>mdi-account-plus</v-icon>
-      </v-btn>
-      <v-btn icon
         @click="remove">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
@@ -22,15 +18,15 @@
     <mCount :count="team.life">
       <div>
         <v-btn icon
-          @click="ind">
+          @click="remove">
           <v-icon>mdi-shield</v-icon>
         </v-btn>
         <v-btn icon
-          @click="ind">
+          @click="remove">
           <v-icon>mdi-delete</v-icon>
         </v-btn>
         <v-btn icon
-          @click="ind">
+          @click="remove">
           <v-icon>mdi-delete</v-icon>
         </v-btn>
       </div>
@@ -68,10 +64,7 @@ export default {
     },
     delPlayer(i) {
       this.team.players.splice(i,1)
-    },
-    ind() {
-      return
-    },
+    }
   },
   //watch: {},
 }
@@ -100,6 +93,8 @@ export default {
     text-align: center;
   }
   .team .players {
+    height: 148px;
+    background: #333;
     display: flex;
     justify-content: space-around;
   }

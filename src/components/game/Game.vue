@@ -34,6 +34,27 @@ export default {
   computed: {
     game() {
       return this.$root.game
+    },
+    low() {
+      return this.game.teams.reduce((max, team)=>max.life.val<team.life.val?max:team).life.val
+    },
+    high() {
+      return this.game.teams.reduce((max, team)=>max.life.val>team.life.val?max:team).life.val
+    },
+    music() {
+      let high = this.high
+      let low = this.low
+      if (high-low==0)
+        return "start"
+      if (high>30)
+        return "gain"
+      if (low<8)
+        return "late"
+      if (low<2)
+        return "end"
+      if (high-low>5)
+        return "mid"
+      return "normal"
     }
   },
   methods: {

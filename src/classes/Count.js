@@ -6,6 +6,16 @@ class Count {
     this.disp = 0
     this.img = img
     this.sound = sound
+    this.audio = {
+      gain: {
+        i: 0,
+        a: Array(10).fill(0).map(()=>new Audio(sound.gain))
+      },
+      lose: {
+        i: 0,
+        a: Array(10).fill(0).map(()=>new Audio(sound.lose))
+      }
+    }
   }
   add(x=1) {
     this.val+=x
@@ -18,8 +28,8 @@ class Count {
     this.upd()
   }
   upd() {
-    let MAX = 20
-    let MIND = 25
+    let MAX = 10
+    let MIND = 50
     let MAXD = 250
     switch(true) {
     case this.disp<this.val-MAX:
@@ -48,9 +58,21 @@ class Count {
     let delay = MAXD - (dif/MAX*(MAXD-MIND))
     setTimeout(this.upd.bind(this),delay)
   }
+  load() {
+    for (let sound of this.audio) {
+      for (let p of sound.a) {
+        p.load()
+      }
+    }
+  }
   play(name) {
-    let audio = new Audio(this.sound[name])
-    audio.play()
+    let i = this.audio[name].i
+    let a = this.audio[name].a
+    let p = a[i]
+    if (!p.currentTime || p.paused || p.ended) {
+      p.play()
+      this.audio[name].i = ++i%a.length
+    } 
   }
 }
 export default Count

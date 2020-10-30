@@ -24,13 +24,15 @@
 import mPlayer from './Player';
 import mTeam from './Team';
 import Team from '@/classes/Team';
-import Player from '@/classes/Player';
 export default {
   name: 'Game',
   components: {mPlayer, mTeam},
   //props: {},
   //data: ()=>({}),
-  data: () => ({}),
+  data: () => ({
+    music: {},
+    track: null,
+  }),
   computed: {
     game() {
       return this.$root.game
@@ -41,7 +43,7 @@ export default {
     high() {
       return this.game.teams.reduce((max, team)=>max.life.val>team.life.val?max:team).life.val
     },
-    music() {
+    musicState() {
       let high = this.high
       let low = this.low
       if (high-low==0)
@@ -59,13 +61,7 @@ export default {
   },
   methods: {
     addTeam() {
-      let user = this.$root.users[Math.floor((Math.random()*this.$root.users.length))]
-      let deck = this.$root.decks[Math.floor((Math.random()*this.$root.decks.length))]
-      // Add player
-      let player = new Player(user,deck)
-      let team = new Team()
-      team.players.push(player)
-      this.game.teams.push(team) 
+      this.game.teams.push(new Team()) 
     },
     startGame() {
       if (this.game.active && !confirm("Het spel is al gestart, wil je restarten?"))
@@ -82,9 +78,30 @@ export default {
         for (let t of this.game.teams) {
           t.addComms(comms)
         }
+      this.startMusic()
+    },
+    startMusic() {
+      this.music = {
+        intro: new Audio("music/dream/1.mp3"),
+        gain: new Audio("music/dream/5.mp3"),
+        start: new Audio("music/dream/2.mp3"),
+        mid: new Audio("music/dream/5.mp3"),
+        late: new Audio("music/dream/4.mp3"),
+      }
+      this.track = "intro"
+      this.music[this.track].onended = this.loopMusic.bind(this)
+      this.music[this.track].play()
+      //TODO: use this.music to fade or switch music state
+    },
+    loopMusic() {
+      this.music[this.track].onended = null
+      this.track = this.musicState
+      this.music[this.track].onended = this.loopMusic.bind(this)
+      this.music[this.track].play()
     },
     endGame() {
-      //stop music
+      this.music[this.track].pause()
+      this.music[this.track].currentTime = 0
       //write stats
     }
   }

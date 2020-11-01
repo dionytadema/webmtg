@@ -4,6 +4,7 @@
       <div class="data">
         <span class="title">{{deck.name}}</span>
         <Color :color="deck.color"/>
+        <span class="owner">{{deck.format}}</span>
         <span class="owner">By: {{deck.owner}}</span>
         <v-btn icon
           @click="del">

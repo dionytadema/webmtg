@@ -58,7 +58,7 @@ export default {
       e.preventDefault()
       this.drag = true
       this.y = e.clientY || e.touches[0].clientY
-      this.v = this.count.val
+      this.v = 0
       document.addEventListener("mousemove", this.dragMove)
       document.addEventListener("touchmove", this.dragMove)
       document.addEventListener("mouseup", this.dragEnd)
@@ -66,14 +66,14 @@ export default {
     },
     dragMove(e) {
       let ey = e.type=="mousemove"?e.clientY:e.changedTouches[0].clientY
-      this.v = this.count.val + Math.floor((this.y - ey)/10)
+      this.v = Math.floor((this.y - ey)/10)
     },
     dragEnd() {
       document.removeEventListener("mousemove", this.dragMove)
       document.removeEventListener("touchmove", this.dragMove)
       document.removeEventListener("mouseup", this.dragEnd)
       document.removeEventListener("touchend", this.dragEnd)
-      this.count.val = this.v
+      this.count.val += this.v
       this.drag = false
       this.count.run()
     }

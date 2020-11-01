@@ -3,7 +3,7 @@
     <div class="toolbar">
       <v-select class="mx-2"
         v-model="game.mode"
-        :items="['casual','commander','headedgiant']"/>
+        :items="['casual','teams','commander','archenemy','event']"/>
       <div style="flex:5 0 0px"/>
       <v-btn class="mx-2"
         @click="addTeam">
@@ -38,9 +38,13 @@ export default {
       return this.$root.game
     },
     low() {
+      if (!this.game.teams.length)
+        return 20
       return this.game.teams.reduce((max, team)=>max.life.val<team.life.val?max:team).life.val
     },
     high() {
+      if (!this.game.teams.length)
+        return 20
       return this.game.teams.reduce((max, team)=>max.life.val>team.life.val?max:team).life.val
     },
     musicState() {
@@ -56,7 +60,7 @@ export default {
         return "end"
       if (high-low>5)
         return "mid"
-      return "normal"
+      return "start"
     }
   },
   methods: {
@@ -69,9 +73,14 @@ export default {
       this.game.active = true
       let comms = []
       // Reset teams and collect commanders
+      let i = 0
       for (let t of this.game.teams) {
-        t.reset(this.game.mode)
+        let mode = this.game.mode
+        if (i && ["archenemy","event"].includes(mode))
+          mode = "casual"
+        t.reset(mode)
         comms.push(...t.getComms())
+        i++
       }
       // Set commander damage for teams
       if (this.game.mode == "commander")
@@ -80,32 +89,44 @@ export default {
         }
       this.startMusic()
     },
-    startMusic() {
+    async startMusic() {
       this.music = {
-        intro: new Audio("music/dream/1.mp3"),
-        gain: new Audio("music/dream/5.mp3"),
-        start: new Audio("music/dream/2.mp3"),
-        mid: new Audio("music/dream/5.mp3"),
-        late: new Audio("music/dream/4.mp3"),
+        intro: "music/dream/1.mp3",
+        gain: "music/dream/5.mp3",
+        start: "music/dream/2.mp3",
+        mid: "music/dream/5.mp3",
+        late: "music/dream/4.mp3",
       }
       this.track = "intro"
-      this.music[this.track].onended = this.loopMusic.bind(this)
-      this.music[this.track].play()
-      //TODO: use this.music to fade or switch music state
+      let url = this.music[this.track]
+      this.source = await window.audiosys.play(url)
+      this.source.onEnd(this.loopMusic.bind(this))
     },
-    loopMusic() {
-      this.music[this.track].onended = null
+    async loopMusic() {
+      console.log("to "+this.musicState)
       this.track = this.musicState
-      this.music[this.track].onended = this.loopMusic.bind(this)
-      this.music[this.track].play()
+      let url = this.music[this.track]
+      this.source = await window.audiosys.play(url)
+      this.source.loop = true
+      this.source.onEnd(this.loopMusic.bind(this))
     },
-    endGame() {
-      this.music[this.track].pause()
-      this.music[this.track].currentTime = 0
+    async endGame() {
+      this.source.onEnd(null)
+      this.source.fade(0.01,2)
+      await window.sleep(2)
+      this.source.stop()
+      this.source = null
       //write stats
     }
-  }
-  //watch: {},
+  },
+  watch: {
+    musicState(val) {
+      if (!this.source)
+        return
+      console.log("go "+val)
+      this.source.loop = false
+    }
+  },
 }
 </script>
 

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import vuetify from './plugins/vuetify';
 
+import AudioSystem from './classes/AudioSystem'
 import users from './data/users'
 import decks from './data/decks'
 
@@ -27,9 +28,11 @@ new Vue({
   })
 }).$mount('#app')
 
+// Utils
 window.sleep = s=>new Promise(r=>setTimeout(r, s*1000))
+window.audiosys = new AudioSystem()
+// State
 window.jid = Math.floor(Math.random()*256*256)
-
 window.newId = ()=>{
   let t = Math.floor(new Date().getTime()/1000)
   let tx = t.toString(16)

@@ -1,6 +1,8 @@
 import Count from '@/classes/Count';
 class Team {
-  constructor() {
+  constructor(actx, audio) {
+    this.actx = actx
+    this.audio = audio
     this.players = []
     // Game state
     this.life = new Count(
@@ -24,9 +26,8 @@ class Team {
       casual: 20,
       teams: 30,
       commander: 40,
-      enemy: 40,
-      hydra: 3,
-      gods: 3
+      archenemy: 40,
+      event: 3
     }[mode]
     this.life.val = life
     this.life.disp = life

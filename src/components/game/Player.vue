@@ -4,6 +4,8 @@
       <!--Card class="icon" :image="player.user.img"/-->
       <span class="title">
         {{player.user.name}}</span>
+      <mDeckPicker
+        @set-deck="setDeck"/>
       <v-btn icon
         @click="$emit('del-player',i)">
         <v-icon>mdi-delete</v-icon>
@@ -15,16 +17,21 @@
 
 <script>
 import Card from '../ui/Card';
+import mDeckPicker from './DeckPicker';
 export default {
   name: 'mPlayer',
-  components: {Card},
+  components: {mDeckPicker, Card},
   props: {
     player: Object,
     i: Number
   },
   //data: ()=>({}),
   //computed: {},
-  //methods: {},
+  methods: {
+    setDeck(deck) {
+      this.player.deck = deck
+    }
+  },
   //watch: {},
 }
 </script>

@@ -1,10 +1,9 @@
 import Count from '@/classes/Count';
 class Team {
-  constructor(actx, audio) {
-    this.actx = actx
-    this.audio = audio
+  constructor() {
     this.players = []
     // Game state
+    this.alive = true
     this.life = new Count(
       "life",
       null,
@@ -22,19 +21,26 @@ class Team {
     this.coms = []
   }
   reset(mode) {
-    let life = {
+    this.alive = true
+    this.startlife = {
       casual: 20,
       teams: 30,
       commander: 40,
       archenemy: 40,
       event: 3
     }[mode]
-    this.life.val = life
-    this.life.disp = life
+    this.life.val = this.startlife
+    this.life.disp = this.startlife
     this.pots.val = 0
     this.pots.disp = 0
     this.coms = []
     return mode
+  }
+  toggleAlive() {
+    this.alive = !this.alive
+  }
+  health() {
+    return this.life.val/this.startlife
   }
   getComms() {
     let comms = []

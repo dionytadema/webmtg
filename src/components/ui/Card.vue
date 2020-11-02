@@ -69,7 +69,6 @@ export default {
   height: 40px;
   background-size: calc(170% * var(--scale));
 }
-
 .card.full {
   width: 265px;
   height: 370px;

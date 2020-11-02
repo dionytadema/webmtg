@@ -1,18 +1,21 @@
 import Vue from 'vue'
+import store from './store'
 import App from './App.vue'
 import vuetify from './plugins/vuetify';
 
 import AudioSystem from './classes/AudioSystem'
 import users from './data/users'
 import decks from './data/decks'
+import music from './data/music'
 
 Vue.config.productionTip = false
 
 new Vue({
   vuetify,
+  store,
   render: h => h(App),
   data: ()=>({
-    path: "load",
+    path: "home",
     // Game
     game: {
         active: false,
@@ -23,6 +26,7 @@ new Vue({
     // Data
     users: users,
     decks: decks,
+    music: music,
     // Constants
     gurl: "https://gatherer.wizards.com/Handlers/Image.ashx?",
   })

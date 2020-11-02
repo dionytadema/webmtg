@@ -10,9 +10,7 @@
 export default {
   name: 'Color',
   //components: {},
-  props: {
-    color: String,
-  }
+  props: {color: String}
   //data: ()=>({}),
   //computed: {},
   //methods: {},

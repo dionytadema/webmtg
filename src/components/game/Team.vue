@@ -6,33 +6,30 @@
       <mPlayerPicker
         @add-player="addPlayer"/>
       <v-btn icon
-        @click="remove">
+        @click="$emit('remove')">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </div>
     <div class="players">
       <mPlayer v-for="(p,i) of team.players" :key="i" 
-        :player="p" :i="i"
+        :player="p"
         @del-player="delPlayer"/>
     </div>
     <mCount :count="team.life">
       <div>
         <v-btn icon
-          @click="remove">
-          <v-icon>mdi-shield</v-icon>
+          @click="team.toggleAlive()">
+          <v-icon>{{aliveIcon}}</v-icon>
         </v-btn>
         <v-btn icon
-          @click="remove">
-          <v-icon>mdi-delete</v-icon>
-        </v-btn>
-        <v-btn icon
-          @click="remove">
-          <v-icon>mdi-delete</v-icon>
+          @click="$emit('shoot')">
+          <v-icon>mdi-target</v-icon>
         </v-btn>
       </div>
     </mCount>
     <mCount :count="team.pots"/>
-    <mCount v-for="(c, i) of team.coms" :key="i" :count="c"/>
+    <mCount v-for="(c, i) of team.coms" :key="i" :count="c"
+      @damage="damage"/>
   </div>
 </template>
 
@@ -49,11 +46,12 @@ export default {
     i: Number,
   },
   //data: ()=>({}),
-  //computed: {},
+  computed: {
+    aliveIcon() {
+      return "mdi-heart"+(this.team.alive?"":"-outline")
+    }
+  },
   methods: {
-    remove() {
-      this.$root.game.teams.splice(this.i, 1)
-    },
     addPlayer(u) {
       if (!u) 
         u = this.$root.users[Math.floor((Math.random()*this.$root.users.length))]

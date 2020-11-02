@@ -15,62 +15,50 @@
         @click="endGame">
         end</v-btn>
     </div>
-    <mTeam v-for="(t, i) of game.teams" :key="i" :team="t" :i="i"/>
-    <mPlayer v-for="(p, i) of game.players" :key="i" :player="p"/>
+    <mMusic :game="game"/>
+    <mTeam v-for="(t, i) of game.teams" :key="i" :team="t" :i="i"
+      @remove="delTeam(i)"
+      @shoot="hit(i)"
+      @win="win(i)"/>
   </div>
 </template>
 
 <script>
-import mPlayer from './Player';
-import mTeam from './Team';
 import Team from '@/classes/Team';
+import mTeam from './Team';
+import mMusic from './Music';
+
 export default {
   name: 'Game',
-  components: {mPlayer, mTeam},
+  components: {mTeam, mMusic},
   //props: {},
   //data: ()=>({}),
   data: () => ({
-    music: {},
     track: null,
   }),
   computed: {
     game() {
       return this.$root.game
     },
-    low() {
-      if (!this.game.teams.length)
-        return 20
-      return this.game.teams.reduce((max, team)=>max.life.val<team.life.val?max:team).life.val
-    },
-    high() {
-      if (!this.game.teams.length)
-        return 20
-      return this.game.teams.reduce((max, team)=>max.life.val>team.life.val?max:team).life.val
-    },
-    musicState() {
-      let high = this.high
-      let low = this.low
-      if (high-low==0)
-        return "start"
-      if (high>30)
-        return "gain"
-      if (low<8)
-        return "late"
-      if (low<2)
-        return "end"
-      if (high-low>5)
-        return "mid"
-      return "start"
-    }
   },
   methods: {
+    hit(i) {
+      this.game.teams.forEach((t,x)=>{
+        if (i!=x)
+          t.life.add(-1)
+      })
+    },
     addTeam() {
       this.game.teams.push(new Team()) 
+    },
+    delTeam(i) {
+      this.game.teams.splice(i, 1)
     },
     startGame() {
       if (this.game.active && !confirm("Het spel is al gestart, wil je restarten?"))
         return
       this.game.active = true
+
       let comms = []
       // Reset teams and collect commanders
       let i = 0
@@ -90,43 +78,15 @@ export default {
       this.startMusic()
     },
     async startMusic() {
-      this.music = {
-        intro: "music/dream/1.mp3",
-        gain: "music/dream/5.mp3",
-        start: "music/dream/2.mp3",
-        mid: "music/dream/5.mp3",
-        late: "music/dream/4.mp3",
-      }
-      this.track = "intro"
-      let url = this.music[this.track]
-      this.source = await window.audiosys.play(url)
-      this.source.onEnd(this.loopMusic.bind(this))
-    },
-    async loopMusic() {
-      console.log("to "+this.musicState)
-      this.track = this.musicState
-      let url = this.music[this.track]
-      this.source = await window.audiosys.play(url)
-      this.source.loop = true
-      this.source.onEnd(this.loopMusic.bind(this))
+      await this.game.music.load()
+      this.game.music.start()
     },
     async endGame() {
-      this.source.onEnd(null)
-      this.source.fade(0.01,2)
-      await window.sleep(2)
-      this.source.stop()
-      this.source = null
+      this.game.music.stop()
       //write stats
     }
   },
-  watch: {
-    musicState(val) {
-      if (!this.source)
-        return
-      console.log("go "+val)
-      this.source.loop = false
-    }
-  },
+  watch: {},
 }
 </script>
 

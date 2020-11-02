@@ -27,15 +27,10 @@
 
 <script>
 import Card from '../ui/Card';
-
 export default {
   name: 'mCount',
-  components: {
-    Card,
-  },
-  props: {
-    count: Object,
-  },
+  components: {Card},
+  props: {count: Object},
   data: () => ({
     drag: false,
     y: 0,
@@ -43,7 +38,8 @@ export default {
   }),
   computed: {
     val() {
-      if (this.drag) return this.v
+      if (this.drag)
+        return this.v>0?"+"+this.v:this.v
       return this.count.disp
     }
   },
@@ -73,25 +69,20 @@ export default {
       document.removeEventListener("touchmove", this.dragMove)
       document.removeEventListener("mouseup", this.dragEnd)
       document.removeEventListener("touchend", this.dragEnd)
-      this.count.val += this.v
+      this.count.add(this.v)
       this.drag = false
-      this.count.run()
     }
   }
-  //methods: {},
   //watch: {},
 }
 </script>
 
 <style>
-  
-
   .count {
     align-self: stretch;
     margin: 4px;
     display: flex;
   }
-
   .count .value {
     flex: 1 0 auto;
     display: flex;
@@ -104,12 +95,10 @@ export default {
   @media only screen and (max-width: 1200px) {
     .count .value .v-btn {padding: 0 4px;}
   }
-  
   .count .ctrl {
     align-self: stretch;
     display: flex;
     flex-flow: column;
     justify-content: space-evenly;
   }
-
 </style>

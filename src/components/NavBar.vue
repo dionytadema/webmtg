@@ -28,16 +28,15 @@
 export default {
   name: 'NavBar',
   //components: {},
-  props: {
-    path: String,
-  },
+  props: {path: String},
   data: () => ({
     nav: [
+      {t:"Home", i:"home", l:"home"},
       {t:"Play", i:"play", l:"play"},
       {t:"Decks", i:"cards", l:"deck"},
       {t:"Players", i:"account-multiple",  l:"user"},
-      {t:"Stats", i:"chart-box", l:"stat"},
-      {t:"Music", i:"music", l:"sound"},
+      //{t:"Stats", i:"chart-box", l:"stat"},
+      {t:"Music", i:"music", l:"music"},
       {t:"Settings", i:"cog", l:"cnfg"},
     ]
   }),

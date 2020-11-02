@@ -11,7 +11,7 @@
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </div>
-    <Card :image="player.deck.img"/>
+    <Card v-if="player.deck" :image="player.deck.img"/>
   </div>
 </template>
 

@@ -59,14 +59,20 @@ export default {
       this.owner = null,
       this.img = 0
     },
-    addDeck() {
-      this.$root.decks.push({
-        id: window.newId(),
-        name: this.name,
-        color: this.color,
-        img: this.img,
-        owner: this.owner,
+    async addDeck() {
+      let res = await fetch('API/decks/add.php', {
+        method: 'POST',
+        body: JSON.stringify({
+          id: window.newId(),
+          name: this.name,
+          //color: this.color,
+          image: this.img,
+          //owner: this.owner,
+        })
       })
+      let json = await res.json()
+      console.log(json)
+      /*this.$root.decks.push()*/
       this.clear()
     }
   }

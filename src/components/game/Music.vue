@@ -77,8 +77,8 @@ export default {
   },
   //methods: {},
   watch: {
-    state(o, n) {
-      this.game.music.set(n)
+    state(s) {
+      this.game.music.set(s)
     }
   },
 }

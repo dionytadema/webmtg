@@ -24,8 +24,16 @@ export default {
     deck: Object,
   },
   methods: {
-    del() {
-      this.$root.decks = this.$root.decks.filter(d=>{return d.id!=this.deck.id})
+    async del() {
+      //this.$root.decks = this.$root.decks.filter(d=>{return d.id!=this.deck.id})
+      let res = await fetch('API/decks/del.php', {
+        method: 'POST',
+        body: JSON.stringify({id: deck.id})
+      })
+      if (res.status==200) {
+        this.$emit('deleted', id)
+      }
+      this.clear()
     }
   }
 }

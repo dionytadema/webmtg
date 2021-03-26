@@ -56,23 +56,30 @@ export default {
       this.name = "Nieuw Deck"
       this.color = "cgrubw",
       this.format = "Casual",
-      this.owner = null,
       this.img = 0
+      //this.owner = null,
     },
     async addDeck() {
+      let deck = {
+        name: this.name,
+        color: this.color,
+        format: this.format,
+        img: this.img,
+        // Owner should become a ID
+        //owner: this.owner,
+      }
       let res = await fetch('API/decks/add.php', {
         method: 'POST',
-        body: JSON.stringify({
-          id: window.newId(),
-          name: this.name,
-          //color: this.color,
-          image: this.img,
-          //owner: this.owner,
-        })
+        body: JSON.stringify(deck)
       })
-      let json = await res.json()
-      console.log(json)
-      /*this.$root.decks.push()*/
+      if (res.status==200) {
+        let id = await res.json()
+        deck.id = id
+        // No longer need to push to local storage
+        //this.$root.decks.push(deck)
+        // instead we emit an added event
+        this.$emit('added', deck)
+      }
       this.clear()
     }
   }

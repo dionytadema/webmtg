@@ -1,16 +1,7 @@
 <?php
 	header('Content-type: application/json');
-	// Open our database and create decks table
-	$db = new PDO("sqlite:magic.db");
-	$query = $db->exec("CREATE table IF NOT EXISTS decks (
-		ID CHAR(16) PRIMARY KEY,
-		name TEXT,
-		type INT,
-		image INT,
-		image_scale REAL,
-		image_x REAL,
-		image_y REAL);"
-	);
+	require_once("../database.php");
+	// Parse the request json
 	$post = json_decode(file_get_contents('php://input'), true);
 	// Validate deck
 	if (!isset($post["name"])) {
@@ -23,12 +14,20 @@
 		http_response_code(400);
 		return;
 	}
+	// Prep insert (PDO with sqlite is broken, inserts fail without error, even a simple query will not insert anything, while the same query ran through sqlite works fine! Now with PostgreSQL it works fine tho :)
+	$ins = "INSERT INTO decks (name, color, format, img)
+		VALUES (:name, :color, :format, :img);";
+	$qry = $db->prepare($ins);
 	// Add deck to database
-	$keys = implode("', '", array_map('addslashes', array_keys($post)));
-    $values = implode("', '", array_map('addslashes', array_values($post)));
-    try{
-		$query = $db->exec("INSERT INTO decks ('$keys') VALUES ('$values');");
+	try{
+		$qry->execute([
+			':name' => $post["name"],
+			':color' => isset($post["color"])?$post["color"]:'',
+			':format' => isset($post["format"])?$post["format"]:'casual',
+			':img' => isset($post["img"])?$post["img"]:3
+		]);
+		echo($db->lastInsertId());
 	} catch(PDOException $e) {
-		echo("INSERT INTO decks ('$keys') VALUES ('$values');");;
+		http_response_code(500);
 		echo($e->getMessage());
 	}

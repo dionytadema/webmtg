@@ -1,7 +1,8 @@
 <template>
   <div class="decks">
-    <AddDeck/>
-    <Deck v-for="d in $root.decks" :key="d.id" :deck="d"/>
+    <AddDeck
+      @added="added"/>
+    <Deck v-for="d in decks" :key="d.id" :deck="d"/>
   </div>
 </template>
 
@@ -15,32 +16,22 @@ export default {
     Deck,
     AddDeck,
   },
-
   data: () => ({
     active: false,
-    players: [
-      {name: "Diony",
-        lives:20,
-        poison:0,
-        com: []},
-      {name: "Jaffeth",
-        lives:30,
-        poison:2,
-        com: [
-          {name: "scion",
-            damage: 5},
-        ]},
-      {name: "Brian",
-        lives:26,
-        poison:0,
-        com: [
-          {name: "test",
-            damage: 5},
-          {name: "scion",
-            damage: 20},
-        ]},
-    ],
+    decks: [],
   }),
+  methods: {
+    added(deck) {
+      this.decks.push(deck)
+    },
+    deleted(id) {
+      this.decks.filter(d=>{return d.id!=id})
+    },
+  },
+  async mounted() {
+    let res = await fetch('API/decks.php')
+    this.decks = await res.json()
+  },
 }
 </script>
 

@@ -18,8 +18,6 @@ export default {
   components: {Card},
   props: {
     name: String,
-    type: String,
-    color: String,
     img: Number,
     owner: String,
   },

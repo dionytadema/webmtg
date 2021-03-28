@@ -1,13 +1,11 @@
 <template>
-  <div class="decks">
-    <!--AddDeck/-->
+  <div class="deck">
     <Music v-for="(m, i) in $root.music" :key="i" :music="m"/>
   </div>
 </template>
 
 <script>
 import Music from './Music';
-//import AddDeck from './AddDeck';
 
 export default {
   name: 'Decks',
@@ -22,10 +20,4 @@ export default {
 }
 </script>
 
-<style>
-  .decks {
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-  }
-</style>
+<style></style>

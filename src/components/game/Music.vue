@@ -78,7 +78,8 @@ export default {
   //methods: {},
   watch: {
     state(s) {
-      this.game.music.set(s)
+      if (this.game.music)
+        this.game.music.set(s)
     }
   },
 }

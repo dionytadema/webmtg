@@ -55,7 +55,7 @@ export default {
       this.game.teams.splice(i, 1)
     },
     startGame() {
-      if (this.game.active && !confirm("Het spel is al gestart, wil je restarten?"))
+      if (this.game.active && !confirm("The game has already started, Reset and restart the game?"))
         return
       this.game.active = true
 
@@ -78,12 +78,53 @@ export default {
       this.startMusic()
     },
     async startMusic() {
+      if (!this.game.music)
+        return
       await this.game.music.load()
       this.game.music.start()
     },
     async endGame() {
-      this.game.music.stop()
-      //write stats
+      if (!this.game.active) {
+        alert("The game hasn't started yet!")
+        return
+      }
+      if (this.game.teams.filter(t=>{return t.alive}).lenght>1) {
+        alert("There are still multiple teams alive!")
+        return
+      }
+      if (this.game.music)
+        this.game.music.stop()
+      // Collect stats
+      let teams_won = this.game.teams.filter(t=>{return t.alive})
+      let teams_lost = this.game.teams.filter(t=>{return !t.alive})
+      let stats = []
+      for (let team of teams_won) {
+        for (let player of team.players) {
+          stats.push({
+            user: player.user.id,
+            deck: player.deck.id,
+            result: "won"
+          })
+        }
+      }
+      for (let team of teams_lost) {
+        for (let player of team.players) {
+          stats.push({
+            user: player.user.id,
+            deck: player.deck.id,
+            result: "lost"
+          })
+        }
+      }
+      // Post game and stats
+      // Php will generate game id, and add it to all stats
+      await fetch('API/stats/post.php', {
+        method: 'POST',
+        body: JSON.stringify({
+          format: this.game.mode,
+          stats: stats,
+        })
+      })
     }
   },
   watch: {},

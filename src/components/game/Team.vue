@@ -53,9 +53,10 @@ export default {
   },
   methods: {
     addPlayer(u) {
-      if (!u) 
-        u = this.$root.users[Math.floor((Math.random()*this.$root.users.length))]
-      let d = this.$root.decks[Math.floor((Math.random()*this.$root.decks.length))]
+      let d = {
+        id: 0,
+        img: 0,
+      }
       // Add player
       let player = new Player(u,d)
       this.team.players.push(player)

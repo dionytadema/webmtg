@@ -10,7 +10,7 @@
 		return;
 	}
 	// Prep delete
-	$ins = "DELETE FROM decks WHERE id=:id;";
+	$ins = "DELETE FROM users WHERE id=:id;";
 	$qry = $db->prepare($ins);
 	// Add deck to database
 	try{

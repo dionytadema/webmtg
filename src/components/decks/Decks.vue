@@ -2,19 +2,19 @@
   <div class="decks">
     <AddDeck
       @added="added"/>
-    <Deck v-for="d in decks" :key="d.id" :deck="d"/>
+    <Deck v-for="d in decks" :key="d.id" :deck="d"
+      @deleted="deleted"/>
   </div>
 </template>
 
 <script>
-import Deck from './Deck';
 import AddDeck from './AddDeck';
-
+import Deck from './Deck';
 export default {
   name: 'Decks',
   components: {
-    Deck,
     AddDeck,
+    Deck,
   },
   data: () => ({
     active: false,
@@ -25,11 +25,14 @@ export default {
       this.decks.push(deck)
     },
     deleted(id) {
-      this.decks.filter(d=>{return d.id!=id})
+      console.log(`removing ${id}`)
+      let idx = this.decks.map(d=>d.id).indexOf(id)
+      this.decks.splice(idx, 1);
     },
   },
+  //watch: {},
   async mounted() {
-    let res = await fetch('API/decks.php')
+    let res = await fetch('API/decks/get.php')
     this.decks = await res.json()
   },
 }

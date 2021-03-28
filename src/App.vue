@@ -6,6 +6,7 @@
       <Game v-if="$root.path=='play'"/>
       <Users v-if="$root.path=='user'"/>
       <Decks v-if="$root.path=='deck'"/>
+      <!--Stats v-if="$root.path=='stats'"/-->
       <Musics v-if="$root.path=='music'"/>
     </v-main>
   </v-app>

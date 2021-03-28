@@ -13,7 +13,7 @@
         Select a deck to use
       </v-card-title>
       <v-list>
-        <v-list-item v-for="(d, i) in decks" :key="i"
+        <v-list-item v-for="d in decks" :key="d.id"
           @click="set(d)">
           <v-list-item-avatar>
             <Card class="icon" :image="d.img"/>
@@ -35,12 +35,9 @@ export default {
   //props: {},
   data: ()=>({
     open: false,
+    decks: []
   }),
-  computed: {
-    decks() {
-      return this.$root.decks
-    }
-  },
+  //computed: {},
   methods: {
     set(deck) {
       this.$emit('set-deck',deck)
@@ -48,8 +45,11 @@ export default {
     }
   },
   //watch: {},
+  async mounted() {
+    let res = await fetch('API/decks/get.php')
+    this.decks = await res.json()
+  },
 }
 </script>
 
-<style>
-</style>
+<style></style>

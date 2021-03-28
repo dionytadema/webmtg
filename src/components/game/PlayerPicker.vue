@@ -13,7 +13,7 @@
         Select a user to add
       </v-card-title>
       <v-list>
-        <v-list-item v-for="(u, i) in users" :key="i"
+        <v-list-item v-for="u in users" :key="u.id"
           @click="add(u)">
           <v-list-item-avatar>
             <Card class="icon" :image="u.img"/>
@@ -34,13 +34,10 @@ export default {
   components: {Card},
   //props: {},
   data: ()=>({
+    users: [],
     open: false,
   }),
-  computed: {
-    users() {
-      return this.$root.users
-    }
-  },
+  //computed: {},
   methods: {
     add(user) {
       this.$emit('add-player',user)
@@ -48,8 +45,11 @@ export default {
     }
   },
   //watch: {},
+  async mounted() {
+    let res = await fetch('API/users/get.php')
+    this.users = await res.json()
+  },
 }
 </script>
 
-<style>
-</style>
+<style></style>

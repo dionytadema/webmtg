@@ -2,7 +2,7 @@
   <div class="deck">
     <div class="data">
       <Card class="full small"
-        :image="Number(img)"/>
+        :image="img"/>
       <v-text-field
         type="number"
         label="Image (multiverse id)"
@@ -24,11 +24,13 @@
         label="Format"
         v-model="format"
         :items="['Casual','Commander']"/>
-      <v-select class="my-2"
-        dense hide-details
-        label="Door:"
-        v-model="owner"
-        :items="this.$root.users.map(u => u.name)"/>
+      <v-select class="my-3"
+          dense hide-details
+          label="By:"
+          v-model="owner"
+          :items="users"
+          item-text="name"
+          item-value="id"/>
       <v-btn 
         @click="addDeck">
         add</v-btn>
@@ -44,20 +46,22 @@ export default {
   components: {Card, Color},
   //props: {},
   data: () => ({
-    name: "Nieuw Deck",
+    users: [],
+    // New deck
+    owner: 0,
+    name: "New deck",
     color: "cgrubw",
-    owner: null,
     format: "Casual",
     img: 0,
   }),
   //computed: {},
   methods: {
     clear() {
-      this.name = "Nieuw Deck"
-      this.color = "cgrubw",
-      this.format = "Casual",
+      this.name = "New deck"
+      this.color = "cgrubw"
+      this.format = "Casual"
       this.img = 0
-      //this.owner = null,
+      this.owner = 0
     },
     async addDeck() {
       let deck = {
@@ -65,8 +69,7 @@ export default {
         color: this.color,
         format: this.format,
         img: this.img,
-        // Owner should become a ID
-        //owner: this.owner,
+        owner: this.owner,
       }
       let res = await fetch('API/decks/add.php', {
         method: 'POST',
@@ -75,6 +78,8 @@ export default {
       if (res.status==200) {
         let id = await res.json()
         deck.id = id
+        // Set the name
+        deck.owner = this.users.find(u=>{return u.id==deck.owner}).name
         // No longer need to push to local storage
         //this.$root.decks.push(deck)
         // instead we emit an added event
@@ -82,8 +87,13 @@ export default {
       }
       this.clear()
     }
-  }
+  },
   //watch: {},
+  async mounted() {
+    let res = await fetch('API/users/get.php')
+    this.users = await res.json()
+  },
+
 }
 </script>
 

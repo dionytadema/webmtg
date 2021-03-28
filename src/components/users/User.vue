@@ -1,12 +1,12 @@
 <template>
   <div class="deck">
-    <Card :image="img"/>
+    <Card :image="user.img"/>
     <div class="data">
-      <span class="title">{{name}}</span>
+      <span class="title">{{user.name}}</span>
       <div></div>
-      <span class="owner">{{deckCount}} decks</span>
+      <span class="owner">{{user.deck_count}} decks</span>
       <div></div>
-      <span>0 wins - 0 losses</span>
+      <span>{{user.win_count}} wins - {{user.lost_count}} losses</span>
     </div>
   </div>
 </template>
@@ -16,40 +16,15 @@ import Card from '../ui/Card';
 export default {
   name: 'User',
   components: {Card},
-  props: {
-    name: String,
-    img: Number,
-    owner: String,
-  },
+  props: {user: Object},
   //data: ()=>({}),
-  computed: {
-    deckCount() {
-      let count = 0
-      for (let d of this.$root.decks) 
-        if (d.owner == this.name)
-          count++
-      return count
-    }
-  },
+  //computed: {},
   //methods: {},
   //watch: {},
 }
 </script>
 
 <style>
-  .deck {
-    width: 400px;
-    margin: 8px;
-    padding: 4px;
-    display: flex;
-    background: #444;
-    border-radius: 8px;
-  }
-
-  .data {
-    margin-left: 8px;
-  }
-
   .owner {
     color: #aaa;
   }

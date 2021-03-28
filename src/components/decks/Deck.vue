@@ -28,12 +28,11 @@ export default {
       //this.$root.decks = this.$root.decks.filter(d=>{return d.id!=this.deck.id})
       let res = await fetch('API/decks/del.php', {
         method: 'POST',
-        body: JSON.stringify({id: deck.id})
+        body: JSON.stringify({id: this.deck.id})
       })
       if (res.status==200) {
-        this.$emit('deleted', id)
+        this.$emit('deleted', this.deck.id)
       }
-      this.clear()
     }
   }
 }

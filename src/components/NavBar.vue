@@ -31,13 +31,19 @@ export default {
   props: {path: String},
   data: () => ({
     nav: [
+      // Homepage could give an overview of current best ranked decks/players
+      // Or just show the last few games played
+      // and some quickstart options, to get a game started right away
       {t:"Home", i:"home", l:"home"},
       {t:"Play", i:"play", l:"play"},
       {t:"Decks", i:"cards", l:"deck"},
       {t:"Players", i:"account-multiple",  l:"user"},
+      // Stats are now collected but no dedicated stats page yet
       //{t:"Stats", i:"chart-box", l:"stat"},
+      // We can pick from 2 music tracks (if files would have been provided)
       {t:"Music", i:"music", l:"music"},
-      {t:"Settings", i:"cog", l:"cnfg"},
+      // No settings yet
+      //{t:"Settings", i:"cog", l:"cnfg"},
     ]
   }),
   //computed: {},

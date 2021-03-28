@@ -1,24 +1,17 @@
 # webmagic2020
 
-## Project setup
+## Project setup (full)
 ```
 npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
 npm run build
+// Run in the dist folder
+php -S localhost:9000
 ```
 
-### Lints and fixes files
+## Project setup (full)
+get and unzip build
+[dist.zip](https://github.com/dionytadema/webmtg/files/6218143/dist.zip)
 ```
-npm run lint
+// Run in the dist folder
+php -S localhost:9000
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

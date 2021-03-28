@@ -13,7 +13,7 @@ Modify `/dist/API/database.php` to set the postgreSQL database details
 `php -S localhost:9000`
 
 
-## Project setup (full)
+## Project setup (prebuild)
 get and unzip build
 [dist.zip](https://github.com/dionytadema/webmtg/files/6218143/dist.zip)
 
